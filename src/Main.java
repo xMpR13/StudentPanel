@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Main {
 
@@ -122,6 +124,7 @@ class Student implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
         if (saveItem == e.getSource()) {
 
             String studentInfo = new String();
@@ -234,6 +237,40 @@ class Student implements ActionListener {
 
         } else if (searchBtn == e.getSource()) {
 
+            fileChooser = new JFileChooser();
+            file = new File("");
+            String str = "", person_name = "", data = "";
+
+            if (JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(null)) {
+
+                BufferedReader reader = null;
+                try {
+                    file = fileChooser.getSelectedFile();
+                    reader = new BufferedReader(new FileReader(file));
+                    try {
+                        while ((str = reader.readLine()) != null) {
+                            if (str.contains(name.getText())) {
+                                person_name = str;
+                            }
+
+                            data += str + "\n";
+                        }
+
+                    } catch (IOException ex) {
+                        Logger.getLogger(Student.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Student.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    try {
+                        reader.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Student.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                System.out.println(data);
+                area.setText(person_name);
+            }
         }
     }
 }
