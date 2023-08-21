@@ -4,6 +4,7 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.ArrayList;
 
 public class Main {
 
@@ -33,6 +34,7 @@ class Student implements ActionListener {
 
         JFrame frame = new JFrame("STUDENT INFO");
         frame.setVisible(true);
+        frame.setAlwaysOnTop(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setResizable(false);
 
@@ -179,6 +181,59 @@ class Student implements ActionListener {
             }
         } else if (e.getSource() == exitItem) {
             System.exit(0);
+        } else if (deleteBtn == e.getSource()) {
+
+            fileChooser = new JFileChooser();
+            file = new File("Students.txt");
+            ArrayList<String> names = new ArrayList<>();
+            String str = "", data = "", line = "";
+
+            if (JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(null)) {
+                file = fileChooser.getSelectedFile();
+
+                try {
+                    BufferedReader reader = new BufferedReader(new FileReader(file));
+
+                    while ((str = reader.readLine()) != null) {
+                        data = str + "\n";
+                        names.add(data);
+                    }
+
+                    for (int i = 0; i < names.size(); i++) {
+                        if (names.get(i).contains(last_name.getText())) {
+                            names.remove(i);
+                        }
+                    }
+
+                    reader.close();
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                try {
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+
+                    for (int i = 0; i < names.size(); i++) {
+                        writer.write(names.get(i));
+                    }
+                    writer.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+
+            for (int i = 0; i < names.size(); i++) {
+                line = line + names.get(i);
+            }
+
+            System.out.println(names);
+
+            area.setText(line);
+
+        } else if (searchBtn == e.getSource()) {
+
         }
     }
 }
